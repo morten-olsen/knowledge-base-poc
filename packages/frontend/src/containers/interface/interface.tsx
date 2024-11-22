@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAddDocument, useDocuments, useSearch, useUpdate } from "../../features/store/store.hooks"
 
 const Interface = () => {
-  const update = useUpdate();
+  useUpdate();
   const documents = useDocuments();
   const [createInput, setCreateInput] = useState('');
   const addMutation = useAddDocument();
@@ -21,11 +21,11 @@ const Interface = () => {
     <div style={{ display: 'flex' }}>
       <div style={{ flex: 1 }}>
         <h2>Documents</h2>
-        {update.isLoading || documents.isLoading && <div>Loading</div>}
+        {!documents.data || documents.data.length === 0 && <div>Loading</div>}
         {documents.data?.map(a => ({ ...a, embeddings: undefined })).map((document) => (
-          <pre key={document.chunkId}>
-            {JSON.stringify(document, null, '  ')}
-          </pre>
+          <div key={document.chunkId}>
+            {document.body}
+          </div>
         ))}
         <h3>Add</h3>
         <textarea value={createInput} onChange={(e) => setCreateInput(e.target.value)} />

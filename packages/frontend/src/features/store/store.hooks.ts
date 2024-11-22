@@ -1,6 +1,6 @@
-import { nanoid } from 'nanoid';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStoreContext } from "./store.context";
+import { nanoid } from "nanoid";
 
 const useDocuments = () => {
   const { store } = useStoreContext();
@@ -8,7 +8,6 @@ const useDocuments = () => {
     queryKey: ['documents'],
     queryFn: async () => {
       const results = await store.getDocuments();
-      console.log('results', results);
       return results;
     }
   });
@@ -20,7 +19,7 @@ const useUpdate = () => {
   return useQuery({
     queryKey: ['update'],
     queryFn: async () => {
-      await store.update();
+      await store.update()
       return true;
     },
 

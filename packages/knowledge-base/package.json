@@ -10,6 +10,10 @@
 	"files": [
 		"dist"
 	],
+	"exports": {
+		".": "./dist/exports.mjs",
+		"./worker": "./dist/worker/worker.wrapper.js"
+	},
 	"dependencies": {
 		"@electric-sql/pglite": "^0.2.13",
 		"@huggingface/transformers": "^3.0.2",

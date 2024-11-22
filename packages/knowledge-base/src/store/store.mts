@@ -1,5 +1,6 @@
 import { PGlite } from '@electric-sql/pglite'
-import { pipeline, env, FeatureExtractionPipeline } from '@huggingface/transformers';
+import { type PGliteWorker } from '@electric-sql/pglite/worker'
+import { pipeline, FeatureExtractionPipeline } from '@huggingface/transformers';
 import { vector } from "@electric-sql/pglite/vector";
 import ClientPgLite from 'knex-pglite'
 import { Builder } from '../builder/builder.mjs'
@@ -8,9 +9,8 @@ import { migrationSource } from './migrations/migrations.mjs';
 import { nanoid } from 'nanoid';
 import { toSql } from 'pgvector';
 
-env.useBrowserCache = false;
-
 type StoreOptions<T> = {
+  pglite?: PGlite | PGliteWorker;
   builder: Builder<T>;
   location?: string;
 }
@@ -27,6 +27,12 @@ type SearchResult = {
   distance: number;
 }
 
+type StoreDocument = {
+  documentId: string;
+  chunkId: string;
+  body: string;
+}
+
 class Store<T> {
   #options: StoreOptions<T>;
 
@@ -39,7 +45,7 @@ class Store<T> {
 
   #setupDb = async () => {
     const { location } = this.#options;
-    const pglite = new PGlite({
+    const pglite = this.#options.pglite || new PGlite({
       dataDir: location,
       extensions: {
         vector
@@ -65,7 +71,7 @@ class Store<T> {
   }
 
   #setupExctractor = async () => {
-    const extractor = await pipeline('feature-extraction', 'mixedbread-ai/mxbai-embed-large-v1', {
+    const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
       dtype: 'q8',
     });
     return extractor;
@@ -163,4 +169,4 @@ class Store<T> {
   }
 }
 
-export { Store, type SearchResult };
+export { Store, type SearchResult, type StoreDocument };

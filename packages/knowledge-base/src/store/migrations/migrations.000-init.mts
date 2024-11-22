@@ -4,7 +4,7 @@ const up = async (knex: Knex) => {
   await knex.schema.createTable('documents', (table) => {
     table.string('chunkId').primary();
     table.string('documentId').notNullable();
-    table.specificType('embeddings', 'vector(1024)');
+    table.specificType('embeddings', 'vector(384)');
     table.string('body').notNullable();
 
     table.index(['documentId']);

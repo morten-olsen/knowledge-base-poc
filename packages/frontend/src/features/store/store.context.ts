@@ -1,8 +1,7 @@
-import { Store } from "@morten-olsen/knowledge-base"
 import { createContext, useContext } from "react";
+import { Store } from "@morten-olsen/knowledge-base";
 
 type StoreContextValue = {
-  // eslint-disable-next-line
   store: Store<any>;
 }
 
