@@ -1,14 +1,13 @@
-import { nanoid } from 'nanoid';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStoreContext } from "./store.context";
+import { nanoid } from "nanoid";
 
 const useDocuments = () => {
   const { store } = useStoreContext();
   return useQuery({
     queryKey: ['documents'],
     queryFn: async () => {
-      const results = await store.getDocuments();
-      console.log('results', results);
+      const results = await store.request('getDocuments', {});
       return results;
     }
   });
@@ -20,7 +19,7 @@ const useUpdate = () => {
   return useQuery({
     queryKey: ['update'],
     queryFn: async () => {
-      await store.update();
+      await store.request('update', {});
       return true;
     },
 
@@ -40,10 +39,12 @@ const useAddDocument = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (body: string) => {
-      await store.insert([{
-        id: nanoid(),
-        body,
-      }])
+      await store.request('add', {
+        items: [{
+          id: nanoid(),
+          body,
+        }]
+      })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -61,7 +62,7 @@ const useSearch = () => {
   return useMutation({
     mutationKey: ['search'],
     mutationFn: async (prompt: string) => {
-      const result = await store.search({
+      const result = await store.request('search', {
         prompt,
       });
       return result;

@@ -1,43 +1,16 @@
-import { Builder, Store } from "@morten-olsen/knowledge-base";
 import { ReactNode, useRef } from "react"
 import { StoreContext } from "./store.context";
+import WorkerInstance from './store.worker?worker';
+import { KnowledgeBaseWorker } from "@morten-olsen/knowledge-base";
 
 type StoreProviderProps = {
   children?: ReactNode;
 }
 
-class MyBuilder extends Builder<Document> {
-  public process(item: Document) {
-    return {
-      id: item.id,
-      chunks: [item.body],
-    }
-  }
-
-  public async *fetch() {
-    yield [{
-      id: 'cow',
-      body: 'The cow says muh',
-    }, {
-      id: 'cat',
-      body: 'The cat says miauw',
-    }, {
-      id: 'kangaru',
-      body: 'The kangaru says hello',
-    }];
-  }
-}
-
-type Document = {
-  id: string;
-  body: string;
-};
-
 const StoreProvider = ({ children }: StoreProviderProps) => {
-  const store = useRef(new Store({
-    builder: new MyBuilder(),
+  const store = useRef(new KnowledgeBaseWorker({
+    worker: new WorkerInstance(),
   }));
-
   return (
     <StoreContext.Provider value={{ store: store.current }}>
       {children}

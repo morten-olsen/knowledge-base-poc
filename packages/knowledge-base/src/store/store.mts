@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite'
-import { pipeline, env, FeatureExtractionPipeline } from '@huggingface/transformers';
+import { pipeline, FeatureExtractionPipeline } from '@huggingface/transformers';
 import { vector } from "@electric-sql/pglite/vector";
 import ClientPgLite from 'knex-pglite'
 import { Builder } from '../builder/builder.mjs'
@@ -7,8 +7,6 @@ import knex, { Knex } from 'knex';
 import { migrationSource } from './migrations/migrations.mjs';
 import { nanoid } from 'nanoid';
 import { toSql } from 'pgvector';
-
-env.useBrowserCache = false;
 
 type StoreOptions<T> = {
   builder: Builder<T>;
@@ -25,6 +23,12 @@ type SearchResult = {
   chunkId: string;
   body: string;
   distance: number;
+}
+
+type StoreDocument = {
+  documentId: string;
+  chunkId: string;
+  body: string;
 }
 
 class Store<T> {
@@ -163,4 +167,4 @@ class Store<T> {
   }
 }
 
-export { Store, type SearchResult };
+export { Store, type SearchResult, type StoreDocument };

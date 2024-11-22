@@ -1,9 +1,9 @@
-import { Store } from "@morten-olsen/knowledge-base"
 import { createContext, useContext } from "react";
+import { KnowledgeBaseWorker } from "@morten-olsen/knowledge-base";
+import { MyBuilder } from "./store.builder";
 
 type StoreContextValue = {
-  // eslint-disable-next-line
-  store: Store<any>;
+  store: KnowledgeBaseWorker<MyBuilder>;
 }
 
 const StoreContext = createContext<StoreContextValue | undefined>(undefined);
